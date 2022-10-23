@@ -22,14 +22,34 @@ static char selbgcolor[]              = "#005577";
 static const unsigned int baralpha    = 0xd0;
 static const unsigned int borderalpha = OPAQUE;
 static char *colors[][3] = {
-       /*               fg           bg           border   */
-       [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
-       [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
+   /*               fg           bg           border   */
+   [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
+   [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
+   /*                    text             background     not used but cannot be empty */
+   [SchemeStatus]   = { selbordercolor,   normbgcolor,   "#000000"  }, // Statusbar right
+   [SchemeTagsSel]  = { selbordercolor,   normbgcolor,   "#000000"  }, // Tagbar left
+   [SchemeTagsNorm] = { normfgcolor,      normbgcolor,   "#000000"  }, // Tagbar left
+   [SchemeInfoSel]  = { "#f76e0c",        normbgcolor,   "#000000"  }, // infobar middle
+   [SchemeInfoNorm] = { normfgcolor,      normbgcolor,   "#000000"  }, // infobar middle
 };
 static const unsigned int alphas[][3]      = {
 	/*               fg      bg        border     */
 	[SchemeNorm] = { OPAQUE, baralpha, borderalpha },
 	[SchemeSel]  = { OPAQUE, baralpha, borderalpha },
+};
+
+typedef struct {
+	const char *name;
+	const void *cmd;
+} Sp;
+const char *spcmd1[] = {"st", "-n", "spterm", "-g", "120x34", NULL };
+const char *spcmd2[] = {"st", "-n", "spfm", "-g", "144x41", "-e", "lf", NULL };
+const char *spcmd3[] = {"yesplaymusic", NULL };
+static Sp scratchpads[] = {
+	/* name            cmd  */
+	{"spterm",         spcmd1},
+	{"splf",           spcmd2},
+	{"spyesplaymusic", spcmd3},
 };
 
 /* tagging */
@@ -45,6 +65,9 @@ static const Rule rules[] = {
 	{ "Firefox", NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
 	{ "St",      NULL,     NULL,           0,         0,          1,           0,        -1 },
 	{ NULL,      NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
+	{ NULL,      "spterm", NULL,           SPTAG(0),  1,          1,           1,        -1 },
+	{ NULL,      "spfm",   NULL,           SPTAG(1),  1,          1,           1,        -1 },
+	{ "yesplaymusic", NULL,NULL,           SPTAG(2),  1,          0,           1,        -1 },
 };
 
 /* layout(s) */
@@ -135,6 +158,9 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ MODKEY,            			      XK_n,  	   togglescratch,  {.ui = 0 } },
+	{ MODKEY,            			      XK_u,	     togglescratch,  {.ui = 1 } },
+	{ MODKEY,            			      XK_y,	     togglescratch,  {.ui = 2 } },
 };
 
 /* button definitions */
@@ -152,10 +178,9 @@ static const Button buttons[] = {
 	{ ClkStatusText,        ShiftMask,      Button1,        sigstatusbar,   {.i = 6} },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
-	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+	{ ClkClientWin,         MODKEY,         Button1,        resizemouse,    {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
-
