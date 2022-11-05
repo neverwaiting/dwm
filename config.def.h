@@ -43,13 +43,17 @@ typedef struct {
 	const void *cmd;
 } Sp;
 const char *spcmd1[] = {"st", "-n", "spterm", "-g", "120x34", NULL };
-const char *spcmd2[] = {"st", "-n", "spfm", "-g", "144x41", "-e", "lf", NULL };
+const char *spcmd2[] = {"obs", NULL };
 const char *spcmd3[] = {"yesplaymusic", NULL };
+const char *spcmd4[] = {"qv2ray", NULL };
+const char *spcmd5[] = {"virtualbox", NULL };
 static Sp scratchpads[] = {
 	/* name            cmd  */
 	{"spterm",         spcmd1},
-	{"splf",           spcmd2},
+	{"spobs",          spcmd2},
 	{"spyesplaymusic", spcmd3},
+	{"spvpn",          spcmd4},
+	{"spvbox",         spcmd5},
 };
 
 /* tagging */
@@ -62,12 +66,13 @@ static const Rule rules[] = {
 	 */
 	/* class     instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
 	{ "Gimp",    NULL,     NULL,           0,         1,          0,           0,        -1 },
-	{ "Firefox", NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
 	{ "St",      NULL,     NULL,           0,         0,          1,           0,        -1 },
 	{ NULL,      NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
 	{ NULL,      "spterm", NULL,           SPTAG(0),  1,          1,           1,        -1 },
-	{ NULL,      "spfm",   NULL,           SPTAG(1),  1,          1,           1,        -1 },
+	{ "obs",     NULL,     NULL,           SPTAG(1),  1,          0,           1,        -1 },
 	{ "yesplaymusic", NULL,NULL,           SPTAG(2),  1,          0,           1,        -1 },
+	{ "qv2ray",  NULL,     NULL,           SPTAG(3),  1,          0,           1,        -1 },
+	{ "VirtualBox Manager", NULL,NULL,     SPTAG(4),  1,          0,           1,        -1 },
 };
 
 /* layout(s) */
@@ -98,8 +103,12 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selfgcolor, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selbgcolor, NULL };
 static const char *termcmd[]  = { "st", NULL };
+
+/* custom command argument */
+#define OPENBOOKMARK SHCMD("grep -vE '(^$|^#)' ~/.local/share/bookmarks/urls | dmenu -i -l 50 -p bookmarks: | cut -d' ' -f1 | xargs xdg-open")
+#define ADDBOOKMARK { .v = (const char*[]){ "bookmarkadd", NULL } }
 
 /* Xresources preferences to load at startup */
 ResourcePref resources[] = {
@@ -125,6 +134,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	{ MODKEY|ShiftMask,             XK_b,      spawn,          OPENBOOKMARK },
+	{ MODKEY,                       XK_s,      spawn,          ADDBOOKMARK },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
@@ -161,6 +172,8 @@ static const Key keys[] = {
 	{ MODKEY,            			      XK_n,  	   togglescratch,  {.ui = 0 } },
 	{ MODKEY,            			      XK_u,	     togglescratch,  {.ui = 1 } },
 	{ MODKEY,            			      XK_y,	     togglescratch,  {.ui = 2 } },
+	{ MODKEY,            			      XK_q,	     togglescratch,  {.ui = 3 } },
+	{ MODKEY,            			      XK_v,	     togglescratch,  {.ui = 4 } },
 };
 
 /* button definitions */
@@ -178,7 +191,7 @@ static const Button buttons[] = {
 	{ ClkStatusText,        ShiftMask,      Button1,        sigstatusbar,   {.i = 6} },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
-	{ ClkClientWin,         MODKEY,         Button1,        resizemouse,    {0} },
+	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
