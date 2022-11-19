@@ -108,8 +108,8 @@ static const char *termcmd[]  = { "st", NULL };
 
 /* custom command argument */
 #define DMENU "dmenu -i -l 50 -fn 'CaskaydiaCove Nerd Font:size=13' -nb '#222222' -nf '#bbbbbb' -sb '#ffd700' -sf '#005577' -p bookmarks:"
-#define OPENBOOKMARK SHCMD("grep -vE '(^$|^#)' ~/.local/share/bookmarks/urls | "DMENU" | cut -d' ' -f1 | xargs xdg-open")
 #define ADDBOOKMARK { .v = (const char*[]){ "bookmarkadd", NULL } }
+#define OPENBOOKMARK { .v = (const char*[]){ "bookmarkdisplay", NULL } }
 
 /* Xresources preferences to load at startup */
 ResourcePref resources[] = {
