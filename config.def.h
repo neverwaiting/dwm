@@ -7,8 +7,10 @@ static unsigned int snap         = 32;       /* snap pixel */
 static const int swallowfloating = 0;        /* 1 means swallow floating windows by default */
 static int showbar               = 1;        /* 0 means no bar */
 static int topbar                = 1;        /* 0 means bottom bar */
-static char font[]               = "CaskaydiaCove Nerd Font:size=13";
-static char dmenufont[]          = "CaskaydiaCove Nerd Font:size=13";
+// static char font[]               = "CaskaydiaCove Nerd Font:size=13";
+// static char dmenufont[]          = "CaskaydiaCove Nerd Font:size=13";
+static char font[]               = "Fira Code Nerd Font:size=13";
+static char dmenufont[]          = "Fira Code Nerd Font:size=13";
 static const char *fonts[]       = {
   font,
   "NotoColorEmoji:pixelsize=25:antialias=true:autohint=true"
@@ -110,6 +112,10 @@ static const char *termcmd[]  = { "st", NULL };
 #define DMENU "dmenu -i -l 50 -fn 'CaskaydiaCove Nerd Font:size=13' -nb '#222222' -nf '#bbbbbb' -sb '#ffd700' -sf '#005577' -p bookmarks:"
 #define ADDBOOKMARK { .v = (const char*[]){ "bookmarkadd", NULL } }
 #define OPENBOOKMARK { .v = (const char*[]){ "bookmarkdisplay", NULL } }
+#define SCREENSHOT { .v = (const char*[]){ "screenshot", NULL } }
+#define RECORD { .v = (const char*[]){ "dmenurecord", NULL } }
+#define SYSACT { .v = (const char*[]){ "sysact", NULL } }
+#define READPDF { .v = (const char*[]){ "readpdf", NULL } }
 
 /* Xresources preferences to load at startup */
 ResourcePref resources[] = {
@@ -133,10 +139,14 @@ ResourcePref resources[] = {
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
+	{ MODKEY|ShiftMask,             XK_p,      spawn,          SCREENSHOT },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_b,      togglebar,      {0} },
-	{ MODKEY|ShiftMask,             XK_b,      spawn,          OPENBOOKMARK },
+	{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
+	{ MODKEY,                       XK_b,      spawn,          OPENBOOKMARK },
 	{ MODKEY,                       XK_s,      spawn,          ADDBOOKMARK },
+	{ MODKEY,                       XK_u,      spawn,          RECORD },
+	{ MODKEY,                       XK_c,      spawn,          SYSACT },
+	{ MODKEY,                       XK_z,      spawn,          READPDF },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
@@ -171,7 +181,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 	{ MODKEY,            			      XK_n,  	   togglescratch,  {.ui = 0 } },
-	{ MODKEY,            			      XK_u,	     togglescratch,  {.ui = 1 } },
+	{ MODKEY|ShiftMask,            	XK_u,	     togglescratch,  {.ui = 1 } },
 	{ MODKEY,            			      XK_y,	     togglescratch,  {.ui = 2 } },
 	{ MODKEY,            			      XK_q,	     togglescratch,  {.ui = 3 } },
 	{ MODKEY,            			      XK_v,	     togglescratch,  {.ui = 4 } },
