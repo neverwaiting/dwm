@@ -116,6 +116,7 @@ static const char *termcmd[]  = { "st", NULL };
 #define RECORD { .v = (const char*[]){ "dmenurecord", NULL } }
 #define SYSACT { .v = (const char*[]){ "sysact", NULL } }
 #define READPDF { .v = (const char*[]){ "readpdf", NULL } }
+#define COPYNERDFONTICONS { .v = (const char*[]){ "nerdfonticons", NULL } }
 
 /* Xresources preferences to load at startup */
 ResourcePref resources[] = {
@@ -147,6 +148,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_u,      spawn,          RECORD },
 	{ MODKEY,                       XK_c,      spawn,          SYSACT },
 	{ MODKEY,                       XK_z,      spawn,          READPDF },
+	{ MODKEY,                       XK_n,      spawn,          COPYNERDFONTICONS },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
@@ -180,7 +182,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-	{ MODKEY,            			      XK_n,  	   togglescratch,  {.ui = 0 } },
+	{ MODKEY|ShiftMask,            	XK_n,  	   togglescratch,  {.ui = 0 } },
 	{ MODKEY|ShiftMask,            	XK_u,	     togglescratch,  {.ui = 1 } },
 	{ MODKEY,            			      XK_y,	     togglescratch,  {.ui = 2 } },
 	{ MODKEY,            			      XK_q,	     togglescratch,  {.ui = 3 } },
